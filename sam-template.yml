@@ -1,0 +1,48 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-function"
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.7
+      Timeout: 900
+      Role: !GetAtt IamRole.Arn
+      CodeUri: code
+      MemorySize: 128
+      Environment:
+        Variables:
+          TZ: "Asia/Tokyo"
+  IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: "sts:AssumeRole"
+      Policies:
+        - 
+          PolicyName: !Sub "${AWS::StackName}-policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action: "logs:*"
+                Resource: "*"
+              -
+                Effect: "Allow"
+                Action: "dynamodb:*"
+                Resource: !GetAtt DynamoDBTable.Arn
+  DynamoDBTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: !Sub "${AWS::StackName}-table"
+      PrimaryKey: 
+        Name: id
+        Type: String
