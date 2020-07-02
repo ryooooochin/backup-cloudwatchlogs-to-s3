@@ -1,8 +1,8 @@
 # これは何
 
 cloudwatch logsのログをS3に移行するlambda  
-SAMの設定してデプロイ用のバケット（Makefileに記載）を用意すれば  
-`make all` でデプロイされるはず  
+SAMの設定して`make bucket` 後に `make all` でデプロイされるはず  
+バケット名が他と被って作れない場合はMakefileを修正  
 DynamoDBテーブル(backup-cloudwatchlogs-to-s3-table)も同時に作成
 
 # パラメーター
